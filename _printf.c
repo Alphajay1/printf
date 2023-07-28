@@ -1,45 +1,48 @@
 #include "main.h"
 
 /**
- * _printf -  produces output according to a format.
- * @format:  is a character string.
- *
- * Return:  the number of characters printed.
- */
+ * _printf - printf function
+ * @format: string to be printed
+ * Return: On success- the number of charcter printed,
+ * On error, -1 is returned
+*/
 int _printf(const char *format, ...)
 {
 	va_list value;
 	int count = 0;
 
 	va_start(value, format);
-	while (*format != '\0')
+
+	while (*format)
 	{
 		if (*format == '%')
 		{
 			format++;
-			if (*format == 'c')
+			if (*format == '%')
 			{
-				char ch = va_arg(value, int);
-
-				_putchar(ch);
-				count++;
+				count += printpercent('%');
+			}
+			else if (*format == 'c')
+			{
+				count += printchar(va_arg(value, int));
 			}
 			else if (*format == 's')
 			{
-				char *str = va_arg(value, char *);
-
-				while (*str != '\0')
-				{
-					_putchar(*str);
-					count++;
-					str++;
-				}
+				count += printstr(va_arg(value, char *));
+			}
+			else if (*format == 'd' || *format == 'i')
+			{
+				count += printint(va_arg(value, int));
+			}
+			else
+			{
+				count += _putchar('%');
+				count += _putchar(*format);
 			}
 		}
 		else
 		{
-			_putchar(*format);
-			count++;
+			count += _putchar(*format);
 		}
 		format++;
 	}
